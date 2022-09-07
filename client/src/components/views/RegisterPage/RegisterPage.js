@@ -1,69 +1,139 @@
-import React, { useState } from "react";
+import React from "react";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import { Form, Input, Button } from "antd";
+import { registerUser } from "../../../_actions/user_action";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "../../../_actions/user_action";
+
+const formItemLayout = {
+  labelCol: {
+    xs: { span: 24 },
+    sm: { span: 8 },
+  },
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 16 },
+  },
+};
+
+const tailFormItemLayout = {
+  wrapperCol: {
+    xs: {
+      span: 24,
+      offset: 0,
+    },
+    sm: {
+      span: 16,
+      offset: 8,
+    },
+  },
+};
 
 function RegisterPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const [Email, setEmail] = useState("");
-  const [Name, setName] = useState("");
-  const [Password, setPassword] = useState("");
-  const [ConfirmPassword, setConfirmPassword] = useState("");
-
-  const onEmailHandler = (event) => {
-    setEmail(event.currentTarget.value);
-  };
-
-  const onNameHandler = (event) => {
-    setName(event.currentTarget.value);
-  };
-
-  const onPasswordHandler = (event) => {
-    setPassword(event.currentTarget.value);
-  };
-
-  const onConfirmPasswordHandler = (event) => {
-    setConfirmPassword(event.currentTarget.value);
-  };
-
-  const onSubmitHandler = (event) => {
-    event.preventDefault();
-
-    if (Password !== ConfirmPassword) {
-      return alert("비밀번호 일지하는지 확인해주세요.");
-    }
-
-    let body = {
-      email: Email,
-      name: Name,
-      password: Password,
-    };
-
-    dispatch(registerUser(body)).then((response) => {
-      if (response.payload.registerSuccess) {
-        navigate("/login");
-      } else {
-        alert("회원가입에 실패했습니다.");
-      }
-    });
-  };
   return (
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100vh" }}>
-      <form style={{ display: "flex", flexDirection: "column" }} onSubmit={onSubmitHandler}>
-        <label>Email</label>
-        <input type="email" value={Email} onChange={onEmailHandler} />
-        <label>Name</label>
-        <input type="text" value={Name} onChange={onNameHandler} />
-        <label>Password</label>
-        <input type="password" value={Password} onChange={onPasswordHandler} />
-        <label>Confirm Password</label>
-        <input type="password" value={ConfirmPassword} onChange={onConfirmPasswordHandler} />
-        <br />
-        <button>Register</button>
-      </form>
-    </div>
+    <Formik
+      initialValues={{
+        email: "",
+        name: "",
+        password: "",
+        confirmPassword: "",
+      }}
+      validationSchema={Yup.object().shape({
+        name: Yup.string().required("Name is required"),
+        email: Yup.string().email("Email is not valid").required("Email is required"),
+        password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+        confirmPassword: Yup.string()
+          .oneOf([Yup.ref("password"), null], "Password must match")
+          .required("Confirm Password is required"),
+      })}
+      onSubmit={(values, { setSubmitting }) => {
+        setTimeout(() => {
+          let dataToSubmit = {
+            email: values.email,
+            password: values.password,
+            name: values.name,
+          };
+
+          dispatch(registerUser(dataToSubmit)).then((response) => {
+            // console.log(response.payload);
+            if (response.payload.registerSuccess) {
+              navigate("/login");
+            } else {
+              alert(response.payload.err.errmsg);
+            }
+          });
+          setSubmitting(false);
+        }, 500);
+      }}
+    >
+      {(props) => {
+        // eslint-disable-next-line
+        const { values, touched, errors, dirty, isSubmitting, handleChange, handleBlur, handleSubmit, handleReset } = props;
+        return (
+          <div className="app">
+            <h2>Register</h2>
+            <Form style={{ minWidth: "375px" }} {...formItemLayout} onSubmit={handleSubmit}>
+              <Form.Item required label="Email" hasFeedback validateStatus={errors.email && touched.email ? "error" : "success"}>
+                <Input
+                  id="email"
+                  placeholder="Enter your Email"
+                  type="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={errors.email && touched.email ? "text-input error" : "text-input"}
+                />
+                {errors.email && touched.email && <div className="input-feedback">{errors.email}</div>}
+              </Form.Item>
+              <Form.Item required label="Name">
+                <Input
+                  id="name"
+                  placeholder="Enter your name"
+                  type="text"
+                  value={values.name}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={errors.name && touched.name ? "text-input error" : "text-input"}
+                />
+                {errors.name && touched.name && <div className="input-feedback">{errors.name}</div>}
+              </Form.Item>
+              <Form.Item required label="Password" hasFeedback validateStatus={errors.password && touched.password ? "error" : "success"}>
+                <Input
+                  id="password"
+                  placeholder="Enter your password"
+                  type="password"
+                  value={values.password}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={errors.password && touched.password ? "text-input error" : "text-input"}
+                />
+                {errors.password && touched.password && <div className="input-feedback">{errors.password}</div>}
+              </Form.Item>
+              <Form.Item required label="Confirm" hasFeedback>
+                <Input
+                  id="confirmPassword"
+                  placeholder="Enter your confirmPassword"
+                  type="password"
+                  value={values.confirmPassword}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className={errors.confirmPassword && touched.confirmPassword ? "text-input error" : "text-input"}
+                />
+                {errors.confirmPassword && touched.confirmPassword && <div className="input-feedback">{errors.confirmPassword}</div>}
+              </Form.Item>
+              <Form.Item {...tailFormItemLayout}>
+                <Button onClick={handleSubmit} type="primary" disabled={isSubmitting}>
+                  Submit
+                </Button>
+              </Form.Item>
+            </Form>
+          </div>
+        );
+      }}
+    </Formik>
   );
 }
 

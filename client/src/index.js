@@ -4,7 +4,6 @@ import "./index.css";
 import App from "./components/App";
 import reportWebVitals from "./reportWebVitals";
 
-// import "antd/dist/antd.less";
 import "antd/dist/antd.min.css";
 
 import { Provider } from "react-redux";

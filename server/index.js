@@ -27,7 +27,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/users", require("./routes/users"));
-app.use("/api/favorite", require("./routes/favorite"));
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
