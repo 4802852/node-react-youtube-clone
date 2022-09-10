@@ -42,8 +42,6 @@ function LoginPage() {
           };
           dispatch(loginUser(dataToSubmit))
             .then((response) => {
-              console.log(response.payload);
-              // window.localStorage.clear();
               if (response.payload.loginSuccess) {
                 window.localStorage.setItem("userId", response.payload.userId);
                 window.localStorage.setItem("userName", response.payload.userName);
