@@ -68,4 +68,12 @@ router.post("/thumbnail", (req, res) => {
     });
 });
 
+router.post("/uploadvideo", (req, res) => {
+  const video = new Video(req.body);
+  video.save((err, doc) => {
+    if (err) return res.json({ success: false, err });
+    return res.status(200).json({ success: true });
+  });
+});
+
 module.exports = router;
