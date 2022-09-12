@@ -8,12 +8,14 @@ import RegisterPage from "./views/RegisterPage/RegisterPage";
 import NavBar from "./views/NavBar/NavBar";
 import Footer from "./views/Footer/Footer";
 import VideoUploadPage from "./views/VideoUploadPage/VideoUploadPage";
+import VideoDetailPage from "./views/VideoDetailPage/VideoDetailPage";
 
 function App() {
   const AuthLandingPage = auth(LandingPage, null);
   const AuthLoginPage = auth(LoginPage, false);
   const AuthRegisterPage = auth(RegisterPage, false);
   const AuthVideoUploadPage = auth(VideoUploadPage, true);
+  const AuthVideoDetailPage = auth(VideoDetailPage, null);
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -25,6 +27,7 @@ function App() {
             <Route exact path="/login" element={<AuthLoginPage />} />
             <Route exact path="/register" element={<AuthRegisterPage />} />
             <Route exact path="/video/upload" element={<AuthVideoUploadPage />} />
+            <Route exact path="/video/:videoId" element={<AuthVideoDetailPage />} />
           </Routes>
         </div>
         <Footer />

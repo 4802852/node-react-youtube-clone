@@ -85,4 +85,13 @@ router.get("/getvideos", (req, res) => {
     });
 });
 
+router.post("/getvideodetail", (req, res) => {
+  Video.findOne({ _id: req.body.videoId })
+    .populate("writer")
+    .exec((err, videoDetail) => {
+      if (err) return res.status(400).json({ success: false, err });
+      return res.status(200).json({ success: true, videoDetail });
+    });
+});
+
 module.exports = router;
