@@ -6,7 +6,7 @@ function Subscribe(props) {
   const [Subscribed, setSubscribed] = useState(false);
 
   let subscribeNumVariable = { userTo: props.userTo };
-  let subscribeInfoVariable = { userTo: props.userTo, userFrom: localStorage.getItem("userId") };
+  let subscribeInfoVariable = { userTo: props.userTo, userFrom: props.userFrom };
 
   useEffect(() => {
     axios.post("/api/subscribe/subscribenumber", subscribeNumVariable).then((response) => {

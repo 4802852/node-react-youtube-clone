@@ -29,6 +29,7 @@ app.get("/", (req, res) => {
 app.use("/api/users", require("./routes/users"));
 app.use("/api/video", require("./routes/videos"));
 app.use("/api/subscribe", require("./routes/subscribe"));
+app.use("/api/comment", require("./routes/comments"));
 
 app.use("/uploads", express.static("uploads"));
 
