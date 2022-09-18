@@ -32,6 +32,7 @@ function SingleComment(props) {
         console.log(response.data);
         props.commentRefresh(response.data.result);
         setCommentValue("");
+        setOpenReply(false);
       } else {
         alert("댓글 등록에 실패했습니다");
       }
