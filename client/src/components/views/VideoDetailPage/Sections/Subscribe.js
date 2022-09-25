@@ -11,7 +11,7 @@ function Subscribe(props) {
   useEffect(() => {
     axios.post("/api/subscribe/subscribenumber", subscribeNumVariable).then((response) => {
       if (response.data.success) {
-        console.log(response);
+        // console.log(response);
         setSubscribeNumber(response.data.subscribeNumber);
       } else {
         alert("구독자 수 정보를 받아오지 못했습니다.");
@@ -19,7 +19,7 @@ function Subscribe(props) {
     });
     axios.post("/api/subscribe/subscribed", subscribeInfoVariable).then((response) => {
       if (response.data.success) {
-        console.log(response.data);
+        // console.log(response.data);
         setSubscribed(response.data.subscribed);
       } else {
         alert("구독 정보를 받아오지 못했습니다.");
@@ -32,7 +32,7 @@ function Subscribe(props) {
     if (Subscribed) {
       axios.post("/api/subscribe/unsubscribe", subscribeInfoVariable).then((response) => {
         if (response.data.success) {
-          console.log(response.data);
+          // console.log(response.data);
           setSubscribeNumber(SubscribeNumber - 1);
           setSubscribed(!Subscribed);
         } else {
@@ -42,7 +42,7 @@ function Subscribe(props) {
     } else {
       axios.post("/api/subscribe/dosubscribe", subscribeInfoVariable).then((response) => {
         if (response.data.success) {
-          console.log(response.data);
+          // console.log(response.data);
           setSubscribeNumber(SubscribeNumber + 1);
           setSubscribed(!Subscribed);
         } else {
